@@ -8,6 +8,10 @@
 
 </div>
 
+<p align="center">
+  <img src="figures/figure1.png" alt="drawing" width="800"/>
+</p>
+
 ## 1. Installation
 ```bash
 # install pormake
@@ -59,10 +63,13 @@ $ python 2_convert_lammps_data.py
 ```
 
 
-## Citation
+## Citation 📄
 If you want to cite bulk porous materials, please refer to the following paper:
 
 1. Computational Screening of Trillions of Metal–Organic Frameworks for High-Performance Methane Storage, ACS Appl. Mater. Interfaces 2021, 13, 20, 23647–23654. [link](https://doi.org/10.1021/acsami.1c02471)
 
 2. Enhancing Structure–Property Relationships in Porous Materials through Transfer Learning and Cross-Material Few-Shot Learning, ACS Appl. Mater. Interfaces 2023, 15, 48, 56375–56385. [link](https://doi.org/10.1021/acsami.3c10323)
 
+## License 📄
+
+This project is licensed under the MIT License. See the `LICENSE` file for more information.

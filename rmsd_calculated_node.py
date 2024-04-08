@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-b', '--bb-dir', '--building-block-dir', default=None)
     parser.add_argument('-t', '--topo-dir', '--topology-dir', default=None)
-    parser.add_argument('-s, --save', type=str, default='rmsd_calculated_node.pickle')
+    parser.add_argument('-s, --save', type=str, default='data/rmsd_calculated_node.pickle')
 
     args = parser.parse_args()
 

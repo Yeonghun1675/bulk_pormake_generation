@@ -33,7 +33,7 @@ def name_to_mof(_mof_name, db):
     return _mof
 
 
-def build_materials(candidate_file, bb_dir=None, topo_dir=None, save_dir='small/', large_dir='large/'):
+def build_materials(candidate_file, bb_dir=None, topo_dir=None, save_dir='small/', large_dir='large/', cutoff=45.0):
     # Basic settings for accessing database of pormake
     db = pm.Database(bb_dir=bb_dir, topo_dir=topo_dir)
 
@@ -76,7 +76,7 @@ def build_materials(candidate_file, bb_dir=None, topo_dir=None, save_dir='small/
                 continue
 
             max_cell_length = np.max(mof.atoms.cell.cellpar()[:3])
-            if max_cell_length < 45.0:
+            if max_cell_length < cutoff:
                 mof.write_cif("{}/{}.cif".format(save_dir, name))
                 print("Success (small).")
             else:
@@ -96,14 +96,19 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--candidates', '--candidate-file', default=None)
     parser.add_argument('-b', '--bb-dir', '--building-block-dir', default=None)
     parser.add_argument('-t', '--topo-dir', '--topology-dir', default=None)
-
+    parser.add_argument('-s', '--save-dir', dtype=str, default='small/')
+    parser.add_argument('-l', '--large-dir', dtypoe=str, default='large/')
+    parser.add_argument('-co', '--cutoff', dtype=float, default=45.0)
 
     args = parser.parse_args()
 
     build_materials(
         candidate_file=args.candidates, 
         bb_dir=args.bb_dir, 
-        topo_dir=args.topo_dir
+        topo_dir=args.topo_dir,
+        save_dir=args.save_dir,
+        large_dir=args.large_dir,
+        cutoff=args.cutoff,
     )
 
 

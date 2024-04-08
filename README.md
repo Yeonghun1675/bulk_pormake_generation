@@ -21,7 +21,7 @@
 ## 1. Installation
 ```bash
 # install pormake
-$ pip install pormake
+$ pip install tqdm numpy pormake
 
 # download bulk pormake generation
 $ git clone https://github.com/Yeonghun1675/bulk_pormake_generation.git

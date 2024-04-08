@@ -1,4 +1,4 @@
 *.txt
 *.log
-./large
-./small
+large/
+small/

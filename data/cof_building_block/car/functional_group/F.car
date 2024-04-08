@@ -1,0 +1,28 @@
+!BIOSYM archive 3
+PBC=OFF
+Materials Studio Generated CAR File
+!DATE Tue Apr 14 18:20:01 2015
+C4       7.531947111   13.583238772    5.981716711 XXXX 1      C_R     C   0.038
+F        8.685812822   14.217727956    5.658946249 XXXX 1      F_      F  -0.107
+C3       7.550168852   12.224561623    6.316339805 XXXX 1      C_R     C  -0.139
+C2       6.322238882   14.286739395    5.980385565 XXXX 1      C_R     C   0.041
+end
+end
+
+Number of Deleted Atoms		3
+C2 C3 C4
+
+Number of Modified Connection Sites	 1
+
+ModSite	 1
+
+Hydroxyl Group		Yes
+C4	F	C3
+
+Number of Angles	1
+0
+
+MaxRotAngle		180
+
+Connection Atom
+F

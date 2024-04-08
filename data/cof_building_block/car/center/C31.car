@@ -1,0 +1,10 @@
+!BIOSYM archive 3
+PBC=OFF
+Materials Studio Generated CAR File
+!DATE Tue Apr 10 14:44:30 2018
+C1      -1.128807330    1.475505945   -0.036311175 XXXX 1      C_R     C  -0.103
+C2      -0.151238125    0.501736653   -0.039272182 XXXX 1      C_R     C  -0.103
+C3       0.821157735    1.477695740    0.037072156 XXXX 1      C_R     C  -0.103
+C4      -0.156412165    2.451464510    0.040034233 XXXX 1      C_R     C  -0.103
+end
+end

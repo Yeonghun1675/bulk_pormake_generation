@@ -12,6 +12,12 @@
   <img src="figures/figure1.png" alt="drawing" width="800"/>
 </p>
 
+## 0. Hypothetical porous materials
+- [MOF](https://figshare.com/ndownloader/files/38700612) (1 M)
+- [COF](https://figshare.com/ndownloader/files/40299454) (0.5 M)
+- [PPN](https://figshare.com/ndownloader/files/40299277) (0.3 M)
+- [Zeolite](https://figshare.com/ndownloader/files/40299433) (0.1 M)
+
 ## 1. Installation
 ```bash
 # install pormake

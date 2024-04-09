@@ -98,7 +98,7 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--topo-dir', '--topology-dir', default=None)
     parser.add_argument('-s', '--save-dir', dtype=str, default='small/')
     parser.add_argument('-l', '--large-dir', dtypoe=str, default='large/')
-    parser.add_argument('-co', '--cutoff', dtype=float, default=45.0)
+    parser.add_argument('-co', '--cutoff', dtype=float, default=60.0)
 
     args = parser.parse_args()
 

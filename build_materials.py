@@ -1,3 +1,4 @@
+from typing import Optional, Union, List
 import numpy as np
 from pathlib import Path
 import argparse
@@ -9,17 +10,17 @@ pm.log.disable_file_print()
 
 
 # Builder function
-def name_to_mof(_mof_name, db):
-    tokens = _mof_name.split("+")
+def name_to_mof(_mof_name: str, db: pm.Database):
+    tokens: List[str] = _mof_name.split("+")
     _topo_name = tokens[0]
 
     _node_bb_names = []
     _edge_bb_names = []
     for bb in tokens[1:]:
-        if bb.startswith("N"):
+        if bb.startswith("N") or bb.startswith('C'):
             _node_bb_names.append(bb)
 
-        if bb.startswith("E"):
+        if bb.startswith("E") or bb.startswith('L'):
             _edge_bb_names.append(bb)
 
     _topology = db.get_topo(_topo_name)
@@ -33,9 +34,22 @@ def name_to_mof(_mof_name, db):
     return _mof
 
 
-def build_materials(candidate_file, bb_dir=None, topo_dir=None, save_dir='small/', large_dir='large/', cutoff=45.0):
+def build_materials(
+        candidate_file: Union[str, Path], 
+        bb_dir: Optional[Union[str,Path]] = None, 
+        topo_dir: Optional[Union[str,Path]] = None,
+        save_dir: Union[str, Path] = 'small/', 
+        large_dir: Union[str, Path] = 'large/', 
+        cutoff: float = 45.0,
+    ):
     # Basic settings for accessing database of pormake
+    if isinstance(bb_dir, str):
+        bb_dir = Path(bb_dir)
+    if isinstance(topo_dir, str):
+        topo_dir = Path(topo_dir)
+
     db = pm.Database(bb_dir=bb_dir, topo_dir=topo_dir)
+    
 
     # Directory settings & validation
     #candidate_file = "./hmof_candidates.txt"
@@ -96,9 +110,9 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--candidates', '--candidate-file', default=None)
     parser.add_argument('-b', '--bb-dir', '--building-block-dir', default=None)
     parser.add_argument('-t', '--topo-dir', '--topology-dir', default=None)
-    parser.add_argument('-s', '--save-dir', dtype=str, default='small/')
-    parser.add_argument('-l', '--large-dir', dtypoe=str, default='large/')
-    parser.add_argument('-co', '--cutoff', dtype=float, default=60.0)
+    parser.add_argument('-s', '--save-dir', type=str, default='small/')
+    parser.add_argument('-l', '--large-dir', type=str, default='large/')
+    parser.add_argument('-co', '--cutoff', type=float, default=60.0)
 
     args = parser.parse_args()
 

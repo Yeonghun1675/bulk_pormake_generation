@@ -1,5 +1,7 @@
+from typing import Optional, Union, Dict, Any
 import pickle
 import argparse
+from pathlib import Path
 from tqdm import tqdm
 import pormake as pm
 from pormake import Database, Locator
@@ -9,13 +11,22 @@ pm.log.disable_print()
 pm.log.disable_file_print()   
 
 
-def get_predifined_list(bb_dir=None, topo_dir=None):
+def get_predifined_list(
+        bb_dir: Optional[Union[str,Path]] = None, 
+        topo_dir: Optional[Union[str,Path]] = None,
+) -> Dict[str, Any]:
     # Basic settings for accessing database of pormake
+    if isinstance(bb_dir, str):
+        bb_dir = Path(bb_dir)
+    if isinstance(topo_dir, str):
+        topo_dir = Path(topo_dir)
+
     db = Database(bb_dir=bb_dir, topo_dir=topo_dir)
+    # db.serialize()
 
     # Node information
     bbs = db._get_bb_list()
-    node_bbs = [f for f in bbs if f.startswith('N')]
+    node_bbs = [f for f in bbs if (f.startswith('N') or f.startswith('C'))]
 
     # Topology information
     topos = db._get_topology_list()
@@ -28,8 +39,10 @@ def get_predifined_list(bb_dir=None, topo_dir=None):
     # Rmsd calculation (This step is time-consuming)
     for topo_name in tqdm(topos):
         # Obtain topology
-        topo = db.get_topo(topo_name)
-        
+        try:
+            topo = db.get_topo(topo_name)
+        except Exception:
+            continue
         # Record rmsd_calculated node
         total = []
 
@@ -65,7 +78,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-b', '--bb-dir', '--building-block-dir', default=None)
     parser.add_argument('-t', '--topo-dir', '--topology-dir', default=None)
-    parser.add_argument('-s, --save', type=str, default='data/rmsd_calculated_node.pickle')
+    parser.add_argument('-s', '--save', type=str, default='data/rmsd_calculated_node.pickle')
 
     args = parser.parse_args()
 

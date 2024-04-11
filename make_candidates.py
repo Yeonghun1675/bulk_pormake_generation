@@ -1,7 +1,9 @@
+from typing import Dict, Any, Optional, Union
 import pickle
 import random
 import numpy as np
 import argparse
+from tqdm import tqdm
 from itertools import chain
 from pathlib import Path
 import pormake as pm
@@ -52,20 +54,32 @@ def make_mof_name(topo:Topology, nodes:dict, edges:dict):
     return name
 
 
-def make_candidate(pre_defined_list, bb_dir=None, topo_dir=None, max_n_atoms=1000, target_n_mofs=10):
+def contain_metal(_node, _edge):
+    for _bb in chain(_node.values(), _edge.values()):
+        if _bb is None:
+            continue
+        if _bb.has_metal:
+            return True
+    return False
+
+
+def make_candidate(
+        pre_defined_list: Dict[str, Any], 
+        bb_dir: Optional[Union[str,Path]] = None, 
+        topo_dir: Optional[Union[str,Path]] = None,
+        max_n_atoms: int = 1000, 
+        target_n_mofs: int = 10,
+        has_metal: bool = True,
+    ):
+
+    if isinstance(bb_dir, str):
+        bb_dir = Path(bb_dir)
+    if isinstance(topo_dir, str):
+        topo_dir = Path(topo_dir)
 
     # Basic settings for accessing database of pormake
     db = Database(bb_dir=bb_dir, topo_dir=topo_dir)
 
-    ### IMPORTANT: Serialization of database ###
-    ### It is a MANDATORY STEP for using topology data in PORMAKE module!
-    ### You only need to execute this step ONCE! (This step takes some time!)
-    ### After execution, ensure that the .pickle files are created in the directory (/(YOUR_DIRECTORY)/PORMAKE/pormake/database/topologies/*.pickle)
-    ### Also, some topology.pickle files cannot be generated => You can check the failed topology list in the terminal (RECOMMEND: save the failed topology list for later)
-
-    # ↓↓↓↓↓↓↓↓↓↓↓↓ #
-    # db.serialize()
-    # ↑↑↑↑↑↑↑↑↑↑↑↑ #
     failed_topo = ['ibb', 'mmo', 'css', 'tfy-a', 'elv', 'tsn', 'lcz', 'xbn', 'dgo', 'ten', 'scu-h', 'zim', 'ild', 'cds-t', 'crt', 'jsm', 'rht-x', 'mab', 'ddi', 'mhq', 'nbo-x', 'tcb', 'zst', 'she-d', 'ffg-a', 'cdh', 'ast-d', 'ffj-a', 'ddy', 'llw-z', 'tpt', 'utx', 'fnx', 'roa', 'nia-d', 'dnf-a', 'lcw_component_3', 'baz-a', 'yzh', 'dia-x']
 
     # Topology info
@@ -96,14 +110,20 @@ def make_candidate(pre_defined_list, bb_dir=None, topo_dir=None, max_n_atoms=100
 
     # Edge info
 
-    edge = [f for f in db._get_bb_list() if f.startswith('E')] + ['E0']
+    edge = [f for f in db._get_bb_list() if f.startswith('E') or f.startswith('L')] + ['E0']
     hmof_candidates = []
 
     # Generate hMOFs
+    pbar = tqdm(total=target_n_mofs)
     while len(hmof_candidates) < target_n_mofs:
         # Choose random topology
         _topo_name = random.sample(topo, 1)[0]
-        _topo = db.get_topo(_topo_name)
+
+        try:
+            assert _topo_name in node
+            _topo = db.get_topo(_topo_name)
+        except:
+            continue
 
         # Check node validation (Some nodes of topology is empty because of rmsd_value) 
         is_Valid = True
@@ -126,16 +146,7 @@ def make_candidate(pre_defined_list, bb_dir=None, topo_dir=None, max_n_atoms=100
                 _edge[tuple(k)] = None
 
         # Check MOF
-        is_MOF = False
-        for _bb in chain(_node.values(), _edge.values()):
-            if _bb is None:
-                continue
-
-            if _bb.has_metal:
-                is_MOF = True
-                break
-                
-        if not is_MOF:
+        if has_metal and not contain_metal(_node, _edge):
             continue
 
         # Check the number of atoms
@@ -151,6 +162,7 @@ def make_candidate(pre_defined_list, bb_dir=None, topo_dir=None, max_n_atoms=100
 
         # Add hmof candidates
         hmof_candidates.append(mof_name)
+        pbar.update(1)
 
     return hmof_candidates
 
@@ -162,10 +174,11 @@ if __name__ == '__main__':
 
     parser.add_argument('-b', '--bb-dir', '--building-block-dir', default=None)
     parser.add_argument('-t', '--topo-dir', '--topology-dir', default=None)
-    parser.add_argument('-p, --pre-defined-list', type=str, default='data/rmsd_calculated_node.pickle')
-    parser.add_argument('-s, --save', type=str, default='hmof_candidates.txt')
+    parser.add_argument('-p', '--pre-defined-list', type=str, default='data/rmsd_calculated_node.pickle')
+    parser.add_argument('-s', '--save', type=str, default='hmof_candidates.txt')
     parser.add_argument('-m', '--max-n-atoms', type=int, default=1000, help='How many atoms do hMOFs have at most?')
-    parser.add_argument('-n', 'target-n-mofs', type=int, default=10, help='How many hMOFS do you want to generate?')
+    parser.add_argument('-n', '--target-n-mofs', type=int, default=10, help='How many hMOFS do you want to generate?')
+    parser.add_argument('-hm', '--has-metal', type=bool, default=True, help='If True, structure must have metal atoms (for MOF)')
 
     args = parser.parse_args()
 
@@ -175,6 +188,7 @@ if __name__ == '__main__':
         topo_dir=args.topo_dir,
         max_n_atoms=args.max_n_atoms,
         target_n_mofs=args.target_n_mofs,
+        has_metal=args.has_metal,
     )
 
     # Save your hmof in a txt file

@@ -3,3 +3,6 @@
 *.out
 large/
 small/
+
+*.pickle
+*.ipynb

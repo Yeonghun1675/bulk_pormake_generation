@@ -15,7 +15,7 @@ def serialize(
     if isinstance(topo_dir, str):
         topo_dir = Path(topo_dir)
 
-    db = pm.Database(bb_dir=bb_dir, topo_dir=topo_dir)
+    db = pm.Database(topo_dir=topo_dir)
     db.serialize()
 
 
@@ -24,7 +24,6 @@ if __name__ == '__main__':
         prog='Serialize topology files in pormake'
     )
 
-    parser.add_argument('-b', '--bb-dir', '--building-block-dir', default=None)
     parser.add_argument('-t', '--topo-dir', '--topology-dir', default=None)
     args = parser.parse_args()
 

@@ -30,9 +30,8 @@ $ git clone https://github.com/Yeonghun1675/bulk_pormake_generation.git
 $ python pormake_serialize.py
 
 # Serialize pormake with cusom building blocks and topologies
-$ python pormake_serialize.py --bb-dir=YOUR_BB_DIR --topo-dir=YOUR_TOPO_DIR 
+$ python pormake_serialize.py --topo-dir=YOUR_TOPO_DIR 
 ```
-- `bb-dir` is the directory of the building blocks. If not specified, it uses pormake's default building block database. (default: `None`)
 - `topo-dir` is the directory of the topologies. If not specified, it uses pormake's default topology database. (default: `None`)
 
 
